@@ -1,89 +1,224 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Welcome to Firebase Hosting</title>
+<html lang="en">
 
-    <!-- update the version number as needed -->
-    <script defer src="/__/firebase/12.12.1/firebase-app-compat.js"></script>
-    <!-- include only the Firebase features as you need -->
-    <script defer src="/__/firebase/12.12.1/firebase-auth-compat.js"></script>
-    <script defer src="/__/firebase/12.12.1/firebase-database-compat.js"></script>
-    <script defer src="/__/firebase/12.12.1/firebase-firestore-compat.js"></script>
-    <script defer src="/__/firebase/12.12.1/firebase-functions-compat.js"></script>
-    <script defer src="/__/firebase/12.12.1/firebase-messaging-compat.js"></script>
-    <script defer src="/__/firebase/12.12.1/firebase-storage-compat.js"></script>
-    <script defer src="/__/firebase/12.12.1/firebase-analytics-compat.js"></script>
-    <script defer src="/__/firebase/12.12.1/firebase-remote-config-compat.js"></script>
-    <script defer src="/__/firebase/12.12.1/firebase-performance-compat.js"></script>
-    <!-- 
-      initialize the SDK after all desired features are loaded, set useEmulator to false
-      to avoid connecting the SDK to running emulators.
-    -->
-    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-png" href="/assets/transparent_logo.png">
+    <link rel="stylesheet" href="style.css">
+    <title>Vending Machine</title>
+</head>
 
-    <style media="screen">
-      body { background: #ECEFF1; color: rgba(0,0,0,0.87); font-family: Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
-      #message { background: white; max-width: 360px; margin: 100px auto 16px; padding: 32px 24px; border-radius: 3px; }
-      #message h2 { color: #ffa100; font-weight: bold; font-size: 16px; margin: 0 0 8px; }
-      #message h1 { font-size: 22px; font-weight: 300; color: rgba(0,0,0,0.6); margin: 0 0 16px;}
-      #message p { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
-      #message a { display: block; text-align: center; background: #039be5; text-transform: uppercase; text-decoration: none; color: white; padding: 16px; border-radius: 4px; }
-      #message, #message a { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
-      #load { color: rgba(0,0,0,0.4); text-align: center; font-size: 13px; }
-      @media (max-width: 600px) {
-        body, #message { margin-top: 0; background: white; box-shadow: none; }
-        body { border-top: 16px solid #ffa100; }
-      }
-    </style>
-  </head>
-  <body>
-    <div id="message">
-      <h2>Welcome</h2>
-      <h1>Firebase Hosting Setup Complete</h1>
-      <p>You're seeing this because you've successfully setup Firebase Hosting. Now it's time to go build something extraordinary!</p>
-      <a target="_blank" href="https://firebase.google.com/docs/hosting/">Open Hosting Documentation</a>
-    </div>
-    <p id="load">Firebase SDK Loading&hellip;</p>
+<body>
+    <main>
+        <span class="title">Vending Machine Surveillance</span>
+        <div class="content-container">
+            <!-- Section for logged-out view -->
+            <section id="logged-out-view">
+                <div class="auth-page_container">
+                    <div class="form-container">
+                        <!-- Toggle buttons for sign in and sign up forms -->
+                        <div class="toggle-container">
+                            <div id="signin-toggle-btn" class="auth-toggle-signin">Login</div>
+                            <div id="signup-toggle-btn" class="auth-toggle-signup">Sign Up</div>
+                        </div>
+                        <!-- Sign in form -->
+                        <div id="signin-form" class="login-form-container">
+                            <div class="login-form">
+                                <h2>Login</h2>
+                                <div class="input-group">
+                                    <input type="email" id="signin-email-input" name="email" placeholder="Email"
+                                        required>
+                                    <div id="email-error-message" class="error-msg"></div>
+                                </div>
+                                <div class="input-group">
+                                    <input type="password" id="signin-password-input" name="password"
+                                        placeholder="Password" required>
+                                    <div id="password-error-message" class="error-msg"></div>
+                                </div>
+                                <div id="sign-in-btn" class="login-btn">Sign In</div>
+                            </div>
+                        </div>
+                        <!-- Sign up form -->
+                        <div id="signup-form" class="login-form-container">
+                            <div class="login-form">
+                                <h2>Sign Up</h2>
+                                <div class="input-group">
+                                    <input type="email" id="signup-email-input" name="email" placeholder="Email"
+                                        required>
+                                    <div id="email-error-message" class="error-msg"></div>
+                                </div>
+                                <div class="input-group">
+                                    <input type="password" id="signup-password-input" name="password"
+                                        placeholder="Password" required>
+                                    <div id="password-error-message" class="error-msg"></div>
+                                </div>
+                                <div class="input-group">
+                                    <input type="RFID_kennung" id="rfid-input" name="RFID" placeholder="RFID-Tag (XX XX XX XX)"
+                                        required>
+                                </div>
+                                <div id="sign-up-btn" class="login-btn">Create Account</div>
 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- Section for logged-in view -->
+            <section id="logged-in-view-host">
+                <div class="container">
+                    <button id="reloadBtn">Reload</button>
+
+                    <label for="slot1_field">Slot 1</label>
+                    <div id="one_line">
+                        <input type="number_in" id="slot1_amount" placeholder="X" />
+                        <input type="product_name" id="slot1_field" placeholder="Reload for value" />
+                        <input type="price_in" id="slot1_price" placeholder="X" />
+                    </div>
+                    <label for="slot2_field">Slot 2</label>
+                    <div id="one_line">
+                        <input type="number_in" id="slot2_amount" placeholder="X" />
+                        <input type="product_name" id="slot2_field" placeholder="Reload for value" />
+                        <input type="price_in" id="slot2_price" placeholder="X" />
+                    </div>
+                    <label for="slot3_field">Slot 3</label>
+                    <div id="one_line">
+                        <input type="number_in" id="slot3_amount" placeholder="X" />
+                        <input type="product_name" id="slot3_field" placeholder="Reload for value" />
+                        <input type="price_in" id="slot3_price" placeholder="X" />
+                    </div>
+                    <label for="slot4_field">Slot 4</label>
+                    <div id="one_line">
+                        <input type="number_in" id="slot4_amount" placeholder="X" />
+                        <input type="product_name" id="slot4_field" placeholder="Reload for value" />
+                        <input type="price_in" id="slot4_price" placeholder="X" />
+                    </div>
+                    <label for="slot5_field">Slot 5</label>
+                    <div id="one_line">
+                        <input type="number_in" id="slot5_amount" placeholder="X" />
+                        <input type="product_name" id="slot5_field" placeholder="Reload for value" />
+                        <input type="price_in" id="slot5_price" placeholder="X" />
+                    </div>
+                    <label for="slot6_field">Slot 6</label>
+                    <div id="one_line">
+                        <input type="number_in" id="slot6_amount" placeholder="X" />
+                        <input type="product_name" id="slot6_field" placeholder="Reload for value" />
+                        <input type="price_in" id="slot6_price" placeholder="X" />
+                    </div>
+
+                    <button id="apply_changes_button">Apply Changes</button>
+
+                    <label for="user_name_input">User email</label>
+                    <input type="text" id="username_field" placeholder="User">
+
+                    <label for="user_added_credit_input">Credit</label>
+                    <input type="text" id="credit_field" placeholder="Credit in Euros e.g.10">
+
+                    <button id="apply_credit_button">Add Credit</button>
+
+
+                    <label for="rgb_r_input">RGB-LED red value</label>
+                    <input type="text" id="r_input" placeholder="Rot (0-255)">
+
+                    <label for="rgb_g_input">RGB-LED green value</label>
+                    <input type="text" id="g_input" placeholder="Grün (0-255)">
+
+                    <label for="rgb_b_input">RGB-LED blue value</label>
+                    <input type="text" id="b_input" placeholder="Blau (0-255)">
+
+                    <button id="set_rgb_button">Set Colors</button>
+
+                    <img src="assets/transparent_logo.png">
+                    <div class="top-section">
+                        <h2 class="greeting">You are logged in as <span id="user-email"></span>.</h2>
+                    </div>
+                    <button id="logout-button" class="logout-btn">Logout</button>
+            </section>
+
+            <section id="logged-in-view-user">
+                <div class="container">
+                    <button id="reloadBtn2">Reload</button>
+
+                    <label for="slot1_field">Slot 1</label>
+                    <div id="one_line">
+                        <input type="number_in" id="slot1_amount2" placeholder="X" readonly />
+                        <input type="product_name" id="slot1_field2" placeholder="Reload for value" readonly />
+                        <input type="price_in" id="slot1_price2" placeholder="X" readonly />
+                    </div>
+                    <label for="slot2_field">Slot 2</label>
+                    <div id="one_line">
+                        <input type="number_in" id="slot2_amount2" placeholder="X" readonly />
+                        <input type="product_name" id="slot2_field2" placeholder="Reload for value" readonly />
+                        <input type="price_in" id="slot2_price2" placeholder="X" readonly />
+                    </div>
+                    <label for="slot3_field">Slot 3</label>
+                    <div id="one_line">
+                        <input type="number_in" id="slot3_amount2" placeholder="X" readonly />
+                        <input type="product_name" id="slot3_field2" placeholder="Reload for value" readonly />
+                        <input type="price_in" id="slot3_price2" placeholder="X" readonly />
+                    </div>
+                    <label for="slot4_field">Slot 4</label>
+                    <div id="one_line">
+                        <input type="number_in" id="slot4_amount2" placeholder="X" readonly />
+                        <input type="product_name" id="slot4_field2" placeholder="Reload for value" readonly />
+                        <input type="price_in" id="slot4_price2" placeholder="X" readonly />
+                    </div>
+                    <label for="slot5_field">Slot 5</label>
+                    <div id="one_line">
+                        <input type="number_in" id="slot5_amount2" placeholder="X" readonly />
+                        <input type="product_name" id="slot5_field2" placeholder="Reload for value" readonly />
+                        <input type="price_in" id="slot5_price2" placeholder="X" readonly />
+                    </div>
+                    <label for="slot6_field">Slot 6</label>
+                    <div id="one_line">
+                        <input type="number_in" id="slot6_amount2" placeholder="X" readonly />
+                        <input type="product_name" id="slot6_field2" placeholder="Reload for value" readonly />
+                        <input type="price_in" id="slot6_price2" placeholder="X" readonly />
+                    </div>
+
+                    <label for="user_added_credit_input">Credit</label>
+                    <input type="text" id="credit_field2" placeholder="Credit in Euros e.g.10" readonly >
+
+                    <img src="assets/transparent_logo.png">
+                    <div class="top-section">
+                        <h2 class="greeting">You are logged in as <span id="user-email2"></span>.</h2>
+                    </div>
+                    <button id="logout-button2" class="logout-btn">Logout</button>
+            </section>
+        </div>
+        </div>
+    </main>
+
+    <!-- Script to toggle between signin and signup forms -->
     <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const loadEl = document.querySelector('#load');
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-        // // The Firebase SDK is initialized and available here!
-        //
-        // firebase.auth().onAuthStateChanged(user => { });
-        // firebase.database().ref('/path/to/ref').on('value', snapshot => { });
-        // firebase.firestore().doc('/foo/bar').get().then(() => { });
-        // firebase.functions().httpsCallable('yourFunction')().then(() => { });
-        // firebase.messaging().requestPermission().then(() => { });
-        // firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
-        // firebase.analytics(); // call to activate
-        // firebase.analytics().logEvent('tutorial_completed');
-        // firebase.performance(); // call to activate
-        //
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+        const signinToggleBtn = document.getElementById("signin-toggle-btn");
+        const signupToggleBtn = document.getElementById("signup-toggle-btn");
+        const signInFormView = document.getElementById("signin-form");
+        const signUpFormView = document.getElementById("signup-form");
 
-        try {
-          let app = firebase.app();
-          let features = [
-            'auth', 
-            'database', 
-            'firestore',
-            'functions',
-            'messaging', 
-            'storage', 
-            'analytics', 
-            'remoteConfig',
-            'performance',
-          ].filter(feature => typeof app[feature] === 'function');
-          loadEl.textContent = `Firebase SDK loaded with ${features.join(', ')}`;
-        } catch (e) {
-          console.error(e);
-          loadEl.textContent = 'Error loading the Firebase SDK, check the console.';
-        }
-      });
+        signinToggleBtn.addEventListener('click', () => {
+            signInFormView.style.display = 'block';
+            signUpFormView.style.display = 'none';
+            signinToggleBtn.style.backgroundColor = '#F33F0A';
+            signinToggleBtn.style.color = 'white';
+            signupToggleBtn.style.backgroundColor = 'lightgrey';
+            signupToggleBtn.style.color = 'black';
+        });
+
+        signupToggleBtn.addEventListener('click', () => {
+            signInFormView.style.display = 'none';
+            signUpFormView.style.display = 'block';
+            signinToggleBtn.style.backgroundColor = 'lightgrey';
+            signinToggleBtn.style.color = 'black';
+            signupToggleBtn.style.backgroundColor = '#F33F0A';
+            signupToggleBtn.style.color = 'white';
+        });
     </script>
-  </body>
+
+    <!-- Import external script -->
+    <script type="module" src="script.js"></script>
+</body>
+
 </html>
